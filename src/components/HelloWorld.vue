@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import request from '../utils/require.js'
 export default {
   name: "HelloWorld",
   props: {
