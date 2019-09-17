@@ -19,8 +19,4 @@ request.interceptors.response.use(response => {
   return Promise.reject(error)
 })
 
-// request.get("/db.json").then(response => {
-//   console.log(response.data);
-// });
-
 export default request
