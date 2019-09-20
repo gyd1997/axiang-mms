@@ -1,5 +1,6 @@
 import request from '../utils/request'
 
+const BASE_URI = '/dev-api'
 /* request.get('/db.json').then(response => {
   console.log(response.data)
 }) */
