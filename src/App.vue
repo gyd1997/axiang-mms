@@ -6,7 +6,7 @@
 
 <style>
   body {
-    font-family: "微软雅居";
+    font-family: "微软雅黑";
     margin: 0;
   }
 </style>
