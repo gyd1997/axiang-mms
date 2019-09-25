@@ -2,12 +2,12 @@
   <div class="navbar">
     <el-menu
       :router="true"
-      default-active="/home"
+      default-active="/home/"
       class="el-menu-vertical-demo"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b">
-      <el-menu-item index="/home">
+      <el-menu-item index="/home/">
         <i class="el-icon-s-home"></i>
         <span slot="title">首页</span>
       </el-menu-item>
