@@ -1,3 +1,5 @@
 <template>
-  <div class="main">著区域</div>
+  <div class="main">
+    <router-view></router-view>
+  </div>
 </template>

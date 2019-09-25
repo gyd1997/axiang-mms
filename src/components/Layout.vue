@@ -46,6 +46,5 @@ export default {
   right: 0;
   padding: 10px;
   overflow-y: auto; 
-  background-color: red;
 }
 </style>
