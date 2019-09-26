@@ -4,7 +4,7 @@
       <img class="logo" src="../../assets/logo.png" width="80px" alt="">
       <span class="title">阿香会员管理系统</span>
     </a>
-    <el-dropdown @command="handleCommand(command)">
+    <el-dropdown @command="handleCommand">
       <span class="el-dropdown-link">
         下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
@@ -17,10 +17,37 @@
 </template>
 
 <script>
+import { logout } from '../../api/login'
 export default {
   methods: {
     handleCommand (command) {
-      this.$message('点击了')
+      switch (command) {
+        case 'a':
+          this.$message(`修改密码`)
+          break;
+        case 'b':
+          const token = localStorage.getItem('ax-mms-token')
+          logout(token).then(response => {
+            const resp = response.data
+            if (resp.flag) {
+              // 退出成功
+              // 清除本地数据
+              localStorage.removeItem('ax-mms-token')
+              localStorage.removeItem('ax-mms-user')
+              // 回到登录页面
+              this.$router.push('/login')
+            } else {
+              this.$message({
+                message: resp.message,
+                type: 'warning',
+                duration: 500 // 弹出停留时间
+              })
+            }
+          })
+          break;
+        default:
+          break;
+      }
     }
   }
 }
