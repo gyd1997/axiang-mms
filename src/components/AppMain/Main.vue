@@ -8,6 +8,6 @@
 <script>
 import AppLink from './Link.vue'
 export default {
-  components: {AppLink}
+  components: { AppLink }
 }
 </script>

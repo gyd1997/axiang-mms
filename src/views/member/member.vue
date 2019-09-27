@@ -12,7 +12,11 @@
       <el-table-column prop="phone" label="手机号码"></el-table-column>
       <el-table-column prop="integral" label="可用积分"></el-table-column>
       <el-table-column prop="money" label="开卡金额"></el-table-column>
-      <el-table-column prop="payType" label="支付类型"></el-table-column>
+      <el-table-column prop="payType" label="支付类型">
+        <template slot-scope="scope">
+          <span>{{scope.row.payType | payTypeFilter}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="address" label="会员地址"></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
@@ -31,6 +35,14 @@
 
 <script>
 import memberApi from '../../api/member'
+
+const payTypeOptions = [
+  {type: '1', name: '现金'},
+  {type: '2', name: '微信'},
+  {type: '3', name: '支付宝'},
+  {type: '4', name: '银行卡'}
+]
+
 export default {
   data () {
     return {
@@ -52,6 +64,12 @@ export default {
     },
     handleDelete (id) {
       console.log('编辑', id)
+    }
+  },
+  filters: {
+    payTypeFilter (type) {
+      const payObj = payTypeOptions.find(obj => obj.type === type)
+      return payObj ? payObj.name : null
     }
   }
 }
