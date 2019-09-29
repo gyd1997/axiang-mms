@@ -1,5 +1,34 @@
 <template>
   <div>
+    <el-form ref="searchForm" :inline="true" :model="searchMap" style="margin-top: 20px">
+      <el-form-item>
+        <el-input v-model="searchMap.cardNum" placeholder="会员卡号"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="searchMap.name" placeholder="会员姓名"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="searchMap.payType" placeholder="支付类型">
+          <el-option 
+            v-for="option in payTypeOptions" 
+            :key="option.type" 
+            :label="option.name" 
+            :value="option.type"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-date-picker
+          v-model="searchMap.birthday"
+          type="date"
+          placeholder="出生日期"
+          value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="fetchList">查询</el-button>
+      </el-form-item>
+    </el-form>
     <el-table
       :data="list"
       height="380"
@@ -30,6 +59,7 @@
         </template>
       </el-table-column>
     </el-table>
+
     <el-pagination
       @size-change="fetchList"
       @current-change="fetchList"
@@ -59,7 +89,8 @@ export default {
       total: 0, // 总记录数
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页显示10条数据
-      searchMap: {} // 条件查询绑定的条件值
+      searchMap: {}, // 条件查询绑定的条件值
+      payTypeOptions
     }
   },
   created () {
