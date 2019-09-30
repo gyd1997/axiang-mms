@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-form ref="searchForm" :inline="true" :model="searchMap" style="margin-top: 20px">
-      <el-form-item>
+      <el-form-item prop="cardNum">
         <el-input v-model="searchMap.cardNum" placeholder="会员卡号"></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="name">
         <el-input v-model="searchMap.name" placeholder="会员姓名"></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="payType">
         <el-select v-model="searchMap.payType" placeholder="支付类型">
           <el-option 
             v-for="option in payTypeOptions" 
@@ -17,7 +17,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="birthday">
         <el-date-picker
           v-model="searchMap.birthday"
           type="date"
@@ -27,6 +27,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchList">查询</el-button>
+        <el-button @click="resetForm('searchForm')">重置</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -89,7 +90,12 @@ export default {
       total: 0, // 总记录数
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页显示10条数据
-      searchMap: {}, // 条件查询绑定的条件值
+      searchMap: { // 条件查询绑定的条件值
+        cardNum: '',
+        name: '',
+        payType: '',
+        birthday: ''
+      }, 
       payTypeOptions
     }
   },
@@ -119,6 +125,10 @@ export default {
       // 当页码改变后, 被触发, val 是最新的页面
       this.currentPage = val
       this.fetchList()
+    },
+    resetForm (formName) {
+      console.log(1)
+      this.$refs[formName].resetFields()
     }
   },
   filters: {
