@@ -61,10 +61,10 @@
     </el-table>
 
     <el-pagination
-      @size-change="fetchList"
-      @current-change="fetchList"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[10, 20, 30, 40]"
+      :page-sizes="[10, 20, 50]"
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
@@ -109,6 +109,16 @@ export default {
     },
     handleDelete (id) {
       console.log('编辑', id)
+    },
+    handleSizeChange (val) {
+      // 当每页显示条数改变后, 被触发
+      this.pageSize = val
+      this.fetchList()
+    },
+    handleCurrentChange (val) {
+      // 当页码改变后, 被触发, val 是最新的页面
+      this.currentPage = val
+      this.fetchList()
     }
   },
   filters: {
