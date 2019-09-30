@@ -17,5 +17,14 @@ export default {
       method: 'post',
       data: searchMap
     })
+  },
+
+  // 新增会员
+  add (pojo) {
+    request({
+      url: `/member`,
+      method: 'post',
+      data: pojo
+    })
   }
 }

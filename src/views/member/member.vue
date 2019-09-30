@@ -75,15 +75,16 @@
 
     <el-dialog title="会员编辑" :visible.sync="dialogFormVisible" width="500px">
       <el-form 
+        :rules="rules"
         :model="pojo"
         ref="pojoForm"
         label-width="100px"
         label-position="right"
         style="width: 400px">
-        <el-form-item label="会员卡号">
+        <el-form-item label="会员卡号" prop="cardNum">
           <el-input v-model="pojo.cardNum" ></el-input>
         </el-form-item>
-        <el-form-item label="会员姓名">
+        <el-form-item label="会员姓名" prop="name">
           <el-input v-model="pojo.name" ></el-input>
         </el-form-item>
         <el-form-item label="会员生日">
@@ -104,7 +105,7 @@
         <el-form-item label="可用积分">
           <el-input v-model="pojo.integral"></el-input>
         </el-form-item>
-        <el-form-item label="支付类型">
+        <el-form-item label="支付类型" prop="payType">
           <el-select v-model="pojo.payType" placeholder="支付类型" style="width: 120px;">
             <el-option 
               v-for="option in payTypeOptions" 
@@ -120,7 +121,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addData('pojoForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -151,7 +152,18 @@ export default {
       }, 
       payTypeOptions, // 支付类型
       dialogFormVisible: false, // 对话框控制
-      pojo: {}
+      pojo: {},
+      rules: {
+        cardNum: [
+          {required: true, message: '卡号不能为空', trigger: 'blur'}
+        ],
+        name: [
+          {required: true, message: '姓名不能为空', trigger: 'blur'}
+        ],
+        payType: [
+          {required: true, message: '支付类型不能为空', trigger: 'change'}
+        ]
+      }
     }
   },
   created () {
@@ -184,6 +196,15 @@ export default {
     resetForm (formName) {
       console.log(1)
       this.$refs[formName].resetFields()
+    },
+    addData (formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log(1)
+        } else {
+          return false
+        }
+      })
     }
   },
   filters: {
