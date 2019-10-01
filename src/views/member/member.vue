@@ -121,7 +121,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addData('pojoForm')">确 定</el-button>
+        <el-button type="primary" @click="pojo.id == null ? addData('pojoForm') : updateData('pojoForm') ">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -186,8 +186,35 @@ export default {
         this.total = resp.data.total
       })
     },
+    // 打开编辑窗口
     handleEdit (id) {
       console.log('编辑', id)
+      this.handleAdd()
+      memberApi.getById(id).then(response => {
+        const resp = response.data
+        if (resp.flag) {
+          this.pojo = resp.data
+        }
+      })
+    },
+    updateData (formName) {
+      console.log('update')
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          memberApi.update(this.pojo).then(response => {
+            const resp = response.data
+            if (resp.flag) {
+              this.fetchList()
+              this.dialogFormVisible = false
+            } else {
+              this.$message({
+                message: resp.message,
+                type: 'warning'
+              })
+            }
+          })
+        }
+      })
     },
     handleDelete (id) {
       console.log('编辑', id)
