@@ -26,5 +26,21 @@ export default {
       method: 'post',
       data: pojo
     })
+  },
+
+  // 通过ID查询会员信息
+  getById (id) {
+    return request({
+      url: `/member/${id}`,
+      method: 'get'
+    })
+  },
+
+  update (pojo) {
+    return request({
+      url: `/member/${pojo.id}`,
+      method: 'put',
+      data: pojo
+    })
   }
 }
