@@ -28,7 +28,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchList">查询</el-button>
-        <el-button type="primary" @click="dialogFormVisible = true">新增</el-button>
+        <el-button type="primary" @click="handleAdd">新增</el-button>
         <el-button @click="resetForm('searchForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -87,7 +87,7 @@
         <el-form-item label="会员姓名" prop="name">
           <el-input v-model="pojo.name" ></el-input>
         </el-form-item>
-        <el-form-item label="会员生日">
+        <el-form-item label="会员生日" prop="birthday">
           <el-date-picker
             v-model="pojo.birthday"
             type="date"
@@ -96,13 +96,13 @@
             style="width: 200px;">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="手机号码">
+        <el-form-item label="手机号码" prop="phone">
           <el-input v-model="pojo.phone"></el-input>
         </el-form-item>
-        <el-form-item label="开卡金额">
+        <el-form-item label="开卡金额" prop="money">
           <el-input v-model="pojo.money"></el-input>
         </el-form-item>
-        <el-form-item label="可用积分">
+        <el-form-item label="可用积分" prop="integral">
           <el-input v-model="pojo.integral"></el-input>
         </el-form-item>
         <el-form-item label="支付类型" prop="payType">
@@ -115,8 +115,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="会员地址">
-          <el-input v-model="pojo.address"></el-input>
+        <el-form-item label="会员地址" prop="address">
+          <el-input type="textarea" v-model="pojo.address"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -152,7 +152,16 @@ export default {
       }, 
       payTypeOptions, // 支付类型
       dialogFormVisible: false, // 对话框控制
-      pojo: {},
+      pojo: {
+        cardNum: '',
+        name: '',
+        payType: '',
+        birthday: '',
+        phone: '',
+        address: '',
+        integral: 0,
+        money: 0
+      },
       rules: {
         cardNum: [
           {required: true, message: '卡号不能为空', trigger: 'blur'}
@@ -197,13 +206,35 @@ export default {
       console.log(1)
       this.$refs[formName].resetFields()
     },
+    // 提交新增数据
     addData (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(1)
+          memberApi.add(this.pojo).then(response => {
+            const resp = response.data
+            if (resp.flag) {
+              this.fetchList()
+              this.dialogFormVisible = false
+            } else {
+              this.$message({
+                message: resp.message,
+                type: 'warning'
+              })
+            }
+          })
         } else {
           return false
         }
+      })
+    },
+    // 弹出新增窗口
+    handleAdd () {
+      // this.pojo = {}
+      this.dialogFormVisible = true
+      this.$nextTick(() => { 
+        // this.$nextTick 是一个异步事件, 当渲染结束之后, 它的回调函数才会被执行
+        // 弹出窗口打开时候, 需要加载Dom, 等弹窗加载完DOM之后, 再进行调用resetField()
+        this.$refs['pojoForm'].resetFields()
       })
     }
   },

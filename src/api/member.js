@@ -21,7 +21,7 @@ export default {
 
   // 新增会员
   add (pojo) {
-    request({
+    return request({
       url: `/member`,
       method: 'post',
       data: pojo
