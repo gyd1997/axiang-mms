@@ -188,7 +188,6 @@ export default {
     },
     // 打开编辑窗口
     handleEdit (id) {
-      console.log('编辑', id)
       this.handleAdd()
       memberApi.getById(id).then(response => {
         const resp = response.data
@@ -198,7 +197,6 @@ export default {
       })
     },
     updateData (formName) {
-      console.log('update')
       this.$refs[formName].validate(valid => {
         if (valid) {
           memberApi.update(this.pojo).then(response => {
@@ -216,8 +214,27 @@ export default {
         }
       })
     },
+    // 删除会员
     handleDelete (id) {
-      console.log('编辑', id)
+      this.$confirm('确认删除这条记录吗?', '提示', {
+        confirmButtonText: '确认',
+        cancleButtonText: '取消'
+      }).then(() => {
+        // 确认
+        memberApi.deleteById(id).then(response => {
+          const resp = response.data
+          this.$message({
+            message: resp.message,
+            type: resp.flag ? 'success' : 'error'
+          })
+          if (resp.flag) {
+            // 删除成功, 刷新列表数据
+            this.fetchList()
+          }
+        })
+      }).catch(() => {
+        // 取消
+      })
     },
     handleSizeChange (val) {
       // 当每页显示条数改变后, 被触发

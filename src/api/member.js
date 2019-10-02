@@ -36,11 +36,20 @@ export default {
     })
   },
 
+  // 更新数据
   update (pojo) {
     return request({
       url: `/member/${pojo.id}`,
       method: 'put',
       data: pojo
+    })
+  },
+
+  // 删除会员
+  deleteById (id) {
+    return request({
+      url: `/delete/${id}`,
+      method: 'delete'
     })
   }
 }
