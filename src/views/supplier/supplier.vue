@@ -16,6 +16,7 @@
         <el-button @click="resetForm('searchForm')">重置</el-button>
       </el-form-item>
     </el-form>
+
     <el-table
       :data="list"
       height="380"
@@ -72,7 +73,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addData('pojoForm')">确 定</el-button>
+        <el-button type="primary" @click="pojo.id === null ? addData('pojoForm') : updateData('pojoForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -95,6 +96,7 @@ export default {
       }, 
       dialogFormVisible: false,
       pojo: {
+        id: null,
         name: '',
         linkman: '',
         mobile: '',
@@ -122,7 +124,18 @@ export default {
       })
     },
     handleEdit (id) {
-      console.log('编辑', id)
+      this.handleAdd()
+      supplierApi.getById(id).then(response => {
+        const resp = response.data
+        if (resp.flag) {
+          this.pojo = resp.data
+        } else {
+          this.$message({
+            message: resp.message,
+            type: 'warning'
+          })
+        }
+      })
     },
     handleDelete (id) {
       console.log('删除', id)
@@ -149,6 +162,26 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           supplierApi.add(this.pojo).then(response => {
+            const resp = response.data
+            if (resp.flag) {
+              this.fetchList()
+              this.dialogFormVisible = false
+            } else {
+              this.$message({
+                message: resp.message,
+                type: 'warning'
+              })
+            }
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    updateData (formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          supplierApi.update(this.pojo).then(response => {
             const resp = response.data
             if (resp.flag) {
               this.fetchList()
