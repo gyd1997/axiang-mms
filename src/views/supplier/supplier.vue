@@ -138,7 +138,21 @@ export default {
       })
     },
     handleDelete (id) {
-      console.log('删除', id)
+      this.$confirm('确认删除这条记录吗?', '提示', {
+        confirmButtonText: '确认',
+        cancleButtonText: '取消'
+      }).then(() => {
+        supplierApi.delete(id).then(response => {
+          const resp = response.data
+          this.$message({
+            message: resp.message,
+            type: resp.flag ? 'success' : 'error'
+          })
+          if (resp.flag) {
+            this.fetchList()
+          }
+        })
+      }).catch()
     },
     // 当每页显示条数改变后, 进行调用该方法, val是当前改变后条数
     handleSizeChange (val) {
