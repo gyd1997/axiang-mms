@@ -12,6 +12,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchList">查询</el-button>
+        <el-button type="primary" @click="handleAdd">新增</el-button>
         <el-button @click="resetForm('searchForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -47,6 +48,33 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+
+    <el-dialog title="供应商编辑" :visible.sync="dialogFormVisible" width="500px">
+      <el-form 
+        :rules="rules"
+        :model="pojo"
+        ref="pojoForm"
+        label-width="100px"
+        label-position="right"
+        style="width: 400px">
+        <el-form-item label="供应商名称" prop="name">
+          <el-input v-model="pojo.name" ></el-input>
+        </el-form-item>
+        <el-form-item label="联系人" prop="linkman">
+          <el-input v-model="pojo.linkman" ></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话" prop="mobile">
+          <el-input v-model="pojo.mobile"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input type="textarea" v-model="pojo.remark"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addData('pojoForm')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -60,11 +88,26 @@ export default {
       pageSize: 10, // 每页显示条数
       currentPage: 1, // 当前页码
       total: 0, // 总记录数
-      searchMap: {
+      searchMap: { // 条件查询的绑定字段值
         name: '',
         linkman: '',
         mobile: ''
-      } // 条件查询的绑定字段值
+      }, 
+      dialogFormVisible: false,
+      pojo: {
+        name: '',
+        linkman: '',
+        mobile: '',
+        remark: ''
+      },
+      rules: {
+        name: [
+          {required: true, message: '供应商不能为空', trigger: 'blur'}
+        ],
+        linkman: [
+          {required: true, message: '联系人不能为空', trigger: 'blur'}
+        ]
+      }
     }
   },
   created () {
@@ -76,7 +119,6 @@ export default {
         const data = response.data.data
         this.list = data.rows
         this.total = data.total
-        console.log(this.list)
       })
     },
     handleEdit (id) {
@@ -96,6 +138,32 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    handleAdd () {
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['pojoForm'].resetFields()
+      })
+    },
+    addData (formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          supplierApi.add(this.pojo).then(response => {
+            const resp = response.data
+            if (resp.flag) {
+              this.fetchList()
+              this.dialogFormVisible = false
+            } else {
+              this.$message({
+                message: resp.message,
+                type: 'warning'
+              })
+            }
+          })
+        } else {
+          return false
+        }
+      })
     }
   }
 }
