@@ -1,5 +1,20 @@
 <template>
   <div>
+    <el-form ref="searchForm" :inline="true" :model="searchMap" style="margin-top: 20px">
+      <el-form-item prop="name">
+        <el-input v-model="searchMap.name" placeholder="供应商名称" style="width: 200px"></el-input>
+      </el-form-item>
+      <el-form-item prop="linkman">
+        <el-input v-model="searchMap.linkman" placeholder="联系人" style="width: 200px;"></el-input>
+      </el-form-item>
+      <el-form-item prop="mobile">
+        <el-input v-model="searchMap.mobile" placeholder="联系电话" style="width: 200px;"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="fetchList">查询</el-button>
+        <el-button @click="resetForm('searchForm')">重置</el-button>
+      </el-form-item>
+    </el-form>
     <el-table
       :data="list"
       height="380"
@@ -45,7 +60,11 @@ export default {
       pageSize: 10, // 每页显示条数
       currentPage: 1, // 当前页码
       total: 0, // 总记录数
-      searchMap: {} // 条件查询的绑定字段值
+      searchMap: {
+        name: '',
+        linkman: '',
+        mobile: ''
+      } // 条件查询的绑定字段值
     }
   },
   created () {
@@ -74,6 +93,9 @@ export default {
     handleCurrentChange (val) {
       this.currentPage = val
       this.fetchList()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
     }
   }
 }
