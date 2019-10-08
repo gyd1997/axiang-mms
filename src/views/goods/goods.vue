@@ -1,5 +1,28 @@
 <template>
   <div>
+    <el-form ref="searchForm" :inline="true" :model="searchMap" style="margin-top: 20px">
+      <el-form-item prop="name">
+        <el-input v-model="searchMap.name" placeholder="商品名称" style="width: 200px"></el-input>
+      </el-form-item>
+      <el-form-item prop="code">
+        <el-input v-model="searchMap.code" placeholder="商品编号" style="width: 200px;"></el-input>
+      </el-form-item>
+      <el-form-item prop="supplierName">
+        <el-input 
+          readonly 
+          v-model="searchMap.supplierName" 
+          placeholder="选择供应商" 
+          style="width: 200px;"
+          @click.native="dialogSupplierVisible = true"
+        ></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="fetchList">查询</el-button>
+        <el-button type="primary">新增</el-button>
+        <el-button>重置</el-button>
+      </el-form-item>
+    </el-form>
+
     <el-table
       :data="list"
       height="380"
@@ -35,11 +58,18 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+
+    <!-- 选择供应商对话框 -->
+    <el-dialog title="选择供应商" :visible.sync="dialogSupplierVisible" width="500px">
+      <supplier :isDialog="true" @option-supplier="optionSupplier"></supplier> 
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import goodsApi from '../../api/goods'
+import Supplier from '../supplier/supplier' 
+
 export default {
   data () {
     return {
@@ -47,8 +77,12 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0,
-      searchMap: {}
+      searchMap: {},
+      dialogSupplierVisible: false
     }
+  },
+  components: {
+    Supplier
   },
   created () {
     this.fetchList()
@@ -59,7 +93,6 @@ export default {
         const data = response.data.data
         this.list = data.rows
         this.total = data.total
-        console.log(this.list)
       })
     },
     handleEdit () {
@@ -75,6 +108,12 @@ export default {
     handleCurrentChange () {
       this.currentPage = val
       this.fetchList()
+    },
+    optionSupplier (currentRow) {
+      console.log(currentRow)
+      this.searchMap.supplierName = currentRow.name // 供应商名称
+      this.searchMap.supplierid = currentRow.id // 供应商ID
+      this.dialogSupplierVisible = false
     }
   }
 }
