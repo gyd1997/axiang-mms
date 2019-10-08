@@ -91,7 +91,11 @@
           <el-input v-model="pojo.storageNum"></el-input>
         </el-form-item>
         <el-form-item label="供应商" prop="supplierName">
-          <el-input v-model="pojo.supplierName"></el-input>
+          <el-input 
+          readonly
+          @click.native="editOptionSupplier"
+          v-model="pojo.supplierName"
+          placeholder="选择供应商"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -122,11 +126,27 @@ export default {
       dialogSupplierVisible: false, // 弹出选择供应商对话框
       dialogFormVisible: false, // 编辑窗口
       rules: {
-
+        name: [
+          {required: true, message: '商品名称不能为空', trigger: 'blur'}
+        ],
+        code: [
+          {required: true, message: '商品编码不能为空', trigger: 'blur'}
+        ],
+        retailPrice: [
+          {required: true, message: '零售价不能为空', trigger: 'blur'}
+        ],
       },
       pojo: {
-
-      }
+        name: '',
+        code: '',
+        spec: '',
+        retailPrice: '',
+        purchasePrice: '',
+        storageNum: '',
+        supplierName: '',
+        supplierid: null
+      },
+      isEdit: false
     }
   },
   components: {
@@ -158,9 +178,14 @@ export default {
       this.fetchList()
     },
     optionSupplier (currentRow) {
-      console.log(currentRow)
-      this.searchMap.supplierName = currentRow.name // 供应商名称
-      this.searchMap.supplierid = currentRow.id // 供应商ID
+      if (this.isEdit) {
+        this.pojo.supplierName = currentRow.name
+        this.pojo.supplierid = currentRow.id
+      } else {
+        this.searchMap.supplierName = currentRow.name // 供应商名称
+        this.searchMap.supplierid = currentRow.id // 供应商ID
+      }
+      this.isEdit = false
       this.dialogSupplierVisible = false
     },
     handleAdd () {
@@ -168,6 +193,19 @@ export default {
       this.$nextTick(() => {
         this.$refs['pojoForm'].resetFields()
       })
+    },
+    addData (formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log('提交新增表单')
+        } else {
+          return false
+        }
+      })
+    },
+    editOptionSupplier () {
+      this.isEdit = true
+      this.dialogSupplierVisible = true
     }
   }
 }
