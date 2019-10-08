@@ -18,8 +18,8 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchList">查询</el-button>
-        <el-button type="primary">新增</el-button>
-        <el-button>重置</el-button>
+        <el-button type="primary" @click="handleAdd">新增</el-button>
+        <el-button @click="$refs['searchForm'].resetFields()">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -63,6 +63,43 @@
     <el-dialog title="选择供应商" :visible.sync="dialogSupplierVisible" width="500px">
       <supplier :isDialog="true" @option-supplier="optionSupplier"></supplier> 
     </el-dialog>
+
+    <el-dialog title="编辑商品" :visible.sync="dialogFormVisible" width="500px">
+      <el-form 
+        :rules="rules"
+        :model="pojo"
+        ref="pojoForm"
+        label-width="100px"
+        label-position="right"
+        style="width: 400px">
+        <el-form-item label="商品名称" prop="name">
+          <el-input v-model="pojo.name" ></el-input>
+        </el-form-item>
+        <el-form-item label="商品编码" prop="code">
+          <el-input v-model="pojo.code" ></el-input>
+        </el-form-item>
+        <el-form-item label="商品规格" prop="spec">
+          <el-input v-model="pojo.spec"></el-input>
+        </el-form-item>
+        <el-form-item label="零售价" prop="retailPrice">
+          <el-input v-model="pojo.retailPrice"></el-input>
+        </el-form-item>
+        <el-form-item label="进货价" prop="purchasePrice">
+          <el-input v-model="pojo.purchasePrice"></el-input>
+        </el-form-item>
+        <el-form-item label="库存数量" prop="storageNum">
+          <el-input v-model="pojo.storageNum"></el-input>
+        </el-form-item>
+        <el-form-item label="供应商" prop="supplierName">
+          <el-input v-model="pojo.supplierName"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <!-- <el-button type="primary" @click="pojo.id === null ? addData('pojoForm') : updateData('pojoForm')">确 定</el-button> -->
+        <el-button type="primary" @click="addData('pojoForm')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,8 +114,19 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0,
-      searchMap: {},
-      dialogSupplierVisible: false
+      searchMap: {
+        name: '',
+        code: '',
+        supplierName: ''
+      },
+      dialogSupplierVisible: false, // 弹出选择供应商对话框
+      dialogFormVisible: false, // 编辑窗口
+      rules: {
+
+      },
+      pojo: {
+
+      }
     }
   },
   components: {
@@ -114,6 +162,12 @@ export default {
       this.searchMap.supplierName = currentRow.name // 供应商名称
       this.searchMap.supplierid = currentRow.id // 供应商ID
       this.dialogSupplierVisible = false
+    },
+    handleAdd () {
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['pojoForm'].resetFields()
+      })
     }
   }
 }

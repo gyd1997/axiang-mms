@@ -22,7 +22,7 @@
       height="380"
       border
       style="width: 100%"
-      highlight-current-row
+      :highlight-current-row="isDialog"
       @current-change="handleCurrentChange">
       <el-table-column type="index" label="序号"></el-table-column>
       <el-table-column prop="name" label="供应商名称"></el-table-column>
@@ -52,7 +52,7 @@
       :total="total">
     </el-pagination>
 
-    <el-dialog title="供应商编辑" :visible.sync="dialogFormVisible" width="500px">
+    <el-dialog v-if="!isDialog" title="供应商编辑" :visible.sync="dialogFormVisible" width="500px">
       <el-form 
         :rules="rules"
         :model="pojo"
