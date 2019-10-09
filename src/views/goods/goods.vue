@@ -100,8 +100,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <!-- <el-button type="primary" @click="pojo.id === null ? addData('pojoForm') : updateData('pojoForm')">确 定</el-button> -->
-        <el-button type="primary" @click="addData('pojoForm')">确 定</el-button>
+        <el-button type="primary" @click="pojo.id === null ? addData('pojoForm') : updateData('pojoForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -137,6 +136,7 @@ export default {
         ],
       },
       pojo: {
+        id: null,
         name: '',
         code: '',
         spec: '',
@@ -163,8 +163,14 @@ export default {
         this.total = data.total
       })
     },
-    handleEdit () {
-
+    handleEdit (id) {
+      this.handleAdd()
+      goodsApi.getById(id).then(response => {
+        const resp = response.data
+        if (resp.flag) {
+          this.pojo = resp.data
+        }
+      })
     },
     handleDelete () {
 
@@ -197,7 +203,18 @@ export default {
     addData (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log('提交新增表单')
+          goodsApi.add(this.pojo).then(response => {
+            const resp = response.data
+            if (resp.flag) {
+              this.fetchList()
+              this.dialogFormVisible = false
+            } else {
+              this.$message({
+                message: resp.message,
+                type: 'warning'
+              })
+            }
+          })
         } else {
           return false
         }
@@ -206,6 +223,26 @@ export default {
     editOptionSupplier () {
       this.isEdit = true
       this.dialogSupplierVisible = true
+    },
+    updateData (formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          goodsApi.updata(this.pojo).then(response => {
+            const resp = response.data
+            if (resp.flag) {
+              this.fetchList()
+              this.dialogFormVisible = false
+            } else {
+              this.$message({
+                message: resp.message,
+                type: 'warning'
+              })
+            }
+          })
+        } else {
+          return false 
+        }
+      })
     }
   }
 }

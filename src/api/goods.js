@@ -8,5 +8,28 @@ export default {
       method: 'post',
       data: searchMap
     })
+  },
+
+  add (pojo) {
+    return request({
+      url: '/goods',
+      method: 'post',
+      data: pojo
+    })
+  },
+
+  getById (id) {
+    return request({
+      url: `/goods/${id}`,
+      method: 'get'
+    })
+  },
+
+  updata (pojo) {
+    return request({
+      url: `/goods/${pojo.id}`,
+      method: 'put',
+      data: pojo
+    })
   }
 }
