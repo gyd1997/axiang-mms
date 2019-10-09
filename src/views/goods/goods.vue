@@ -172,8 +172,22 @@ export default {
         }
       })
     },
-    handleDelete () {
-
+    handleDelete (id) {
+      this.$confirm('确认删除此商品吗?', '提示', {
+        ConfirmButtonText: '确认',
+        CancleButtonText: '取消'
+      }).then(() => {
+        goodsApi.deleteById(id).then(response => {
+          const resp = response.data
+          this.$message({
+            message: resp.message,
+            type: resp.flag ? 'success' : 'error'
+          })
+          if (resp.flag) {
+            this.fetchList()
+          }
+        })
+      }).catch()
     },
     handleSizeChange (val) {
       this.pageSize = val

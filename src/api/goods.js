@@ -31,5 +31,12 @@ export default {
       method: 'put',
       data: pojo
     })
+  },
+
+  deleteById (id) {
+    return request({
+      url: `/goods/${id}`,
+      method: 'delete'
+    })
   }
 }
