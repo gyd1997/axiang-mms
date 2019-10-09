@@ -104,6 +104,7 @@ export default {
       },
       dialogFormVisible: false,
       pojo: {
+        id: null,
         username: '',
         name: '',
         age: '',

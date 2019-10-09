@@ -11,7 +11,7 @@ export default {
   
   add (pojo) {
     return request({
-      url: `/staff`,
+      url: '/staff',
       method: 'post',
       data: pojo
     })
