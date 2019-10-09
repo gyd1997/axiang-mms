@@ -82,8 +82,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addData('pojoForm')">确 定</el-button>
-        <!-- <el-button type="primary" @click="pojo.id === null ? addData('pojoForm') : updateData('pojoForm')">确 定</el-button> -->
+        <el-button type="primary" @click="pojo.id === null ? addData('pojoForm') : updateData('pojoForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -133,11 +132,51 @@ export default {
         this.total = data.total
       })
     },
-    handleEdit () {
-      
+    handleEdit (id) {
+      this.handleAdd()
+      staffApi.getById(id).then(response => {
+        const resp = response.data
+        if (resp.flag) {
+          this.pojo = resp.data
+        }
+      })
     },
-    handleDelete () {
-
+    handleDelete (id) {
+      this.$confirm('确认要删除此员工吗?', '提示', {
+        ConfirmButtonText: '确认',
+        CancleButtonText: '取消'
+      }).then(() => {
+        staffApi.deleteStaff(id).then(response => {
+          const resp = response.data
+          this.$message({
+            message: resp.message,
+            type: resp.flag ? 'success' : 'error'
+          })
+          if (resp.flag) {
+            this.fetchList()
+          }
+        })
+      }).catch()
+    },
+    updateData (formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          staffApi.update(this.pojo).then(response => {
+            const resp = response.data
+            if (resp.flag) {
+              this.fetchList()
+              this.dialogFormVisible = false
+            } else {
+              this.$message({
+                message: resp.message,
+                type: 'warning'
+              })
+            }
+          })
+        } else {
+          return false
+        }
+      })
     },
     handleSizeChange (val) {
       this.pageSize = val

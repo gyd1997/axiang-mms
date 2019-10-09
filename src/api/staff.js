@@ -15,5 +15,27 @@ export default {
       method: 'post',
       data: pojo
     })
+  },
+
+  getById (id) {
+    return request({
+      url: `/staff/${id}`,
+      method: 'get',
+    })
+  },
+
+  update (pojo) {
+    return request({
+      url: `/staff/${pojo.id}`,
+      method: 'put',
+      data: pojo
+    })
+  },
+
+  deleteStaff (id) {
+    return request({
+      url: `/staff/${id}`,
+      method: 'delete',
+    })
   }
 }
