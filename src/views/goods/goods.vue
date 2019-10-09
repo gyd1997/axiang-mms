@@ -193,7 +193,7 @@ export default {
       this.pageSize = val
       this.fetchList()
     },
-    handleCurrentChange () {
+    handleCurrentChange (val) {
       this.currentPage = val
       this.fetchList()
     },
