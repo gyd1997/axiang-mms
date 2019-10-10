@@ -25,7 +25,7 @@
 
     <el-table
       :data="list"
-      height="380"
+      height="500"
       border
       style="width: 100%">
       <el-table-column type="index" label="序号"></el-table-column>
