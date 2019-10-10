@@ -38,7 +38,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            login(this.form.username, this.form.password).then(response => {
+            /* login(this.form.username, this.form.password).then(response => {
               const resp = response.data
               if (resp.flag) {
                 // 验证成功, 通过token去获取用户信息
@@ -61,6 +61,16 @@
               } else {
                 // 未通过, 弹出警告
                 this.$message.error('错了哦，这是一条错误消息');
+              }
+            }) */
+            this.$store.dispatch('Login', this.form).then(response => {
+              if (response.flag) {
+                this.$router.push('/')
+              } else {
+                this.$message({
+                  message: response.message,
+                  type: 'warning'
+                })
               }
             })
           } else {

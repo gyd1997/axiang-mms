@@ -9,10 +9,13 @@
 */
 import router from './router'
 import { getUserInfo } from './api/login'
+import store from './store/index'
+import { reject } from 'q'
 
 router.beforeEach((to, from, next) => {
   // 1.获取token
-  const token = localStorage.getItem('ax-mms-token')
+  // const token = localStorage.getItem('ax-mms-token')
+  const token = store.state.user.token
   if (!token) {
     // 1.1 如果没有获取到, 要访问非登陆页面, 则不让访问, 跳转到登陆页面 /login
     if (to.path !== '/login') {
@@ -28,11 +31,12 @@ router.beforeEach((to, from, next) => {
         next()
       } else {
         // 1.2.2 请求路由非登陆页面, 先在本地查看是否有用户信息
-        const userInfo = localStorage.getItem('ax-mms-user')
+        // const userInfo = localStorage.getItem('ax-mms-user')
+        const userInfo = store.state.user.user
         if (userInfo) {
           next()
         } else {
-          // 如果本地没有用户信息, 就通过token去获取用户信息
+          /* // 如果本地没有用户信息, 就通过token去获取用户信息
           getUserInfo(token).then(response => {
             const resp = response.data
             if (resp.flag) {
@@ -44,8 +48,16 @@ router.beforeEach((to, from, next) => {
               // 未获取到用户信息, 重新登录
               next({path: '/login'})
             }
-          })
+          }) */
+          store.dispatch('GetUserInfo').then(response => {
+            if (response.flag) {
+              next()
+            } else {
+              next({path: '/login'})
+            }
+          }).catch(error => {
 
+          })
         }
 
       }

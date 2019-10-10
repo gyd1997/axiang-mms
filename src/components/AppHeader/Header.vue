@@ -62,7 +62,7 @@ export default {
     }
 
     return {
-      user: JSON.parse(localStorage.getItem('ax-mms-user')),
+      user: this.$store.state.user.user,
       dialogFormVisible: false,
       ruleForm: {
         oldPass: '',
@@ -98,7 +98,7 @@ export default {
       }
     },
     handleLogout () {
-      const token = localStorage.getItem('ax-mms-token')
+      /* const token = localStorage.getItem('ax-mms-token')
       logout(token).then(response => {
         const resp = response.data
         if (resp.flag) {
@@ -113,6 +113,17 @@ export default {
             message: resp.message,
             type: 'warning',
             duration: 500 // 弹出停留时间
+          })
+        }
+      }) */
+      this.$store.dispatch('Logout').then(response => {
+        if (response.flag) {
+          this.$router.push('/login')
+        } else {
+          this.$message({
+            message: response.message,
+            type: 'warning',
+            duration: 500
           })
         }
       })
