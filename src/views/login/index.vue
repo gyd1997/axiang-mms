@@ -46,7 +46,6 @@
                   // 获取到了用户的数据
                   const respUser = response.data
                   if (respUser.flag) {
-                    console.log('userInfo', respUser.data)
                     // 1. 保存 token, 用户信息
                     localStorage.setItem('ax-mms-user', JSON.stringify(respUser.data))
                     localStorage.setItem('ax-mms-token', resp.data.token)
